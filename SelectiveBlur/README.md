@@ -1,4 +1,4 @@
-# Selective Region Blur – README
+# Selective Region Blur Checkpoint 2 – README
 
 ## 1. Introduction
 This project implements a selective region blurring system capable of applying privacy-preserving blur to user-defined areas of an image. Users draw a closed boundary around sensitive content, and the system automatically fills the enclosed region and applies a blur of adjustable intensity (mild, medium, strong).
