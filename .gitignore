@@ -1,6 +1,5 @@
 
 # added by colab push script
-*.keras
 *.h5
 *.ckpt
 *.pth
