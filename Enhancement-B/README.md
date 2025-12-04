@@ -4,8 +4,11 @@
 This project implements an automated image enhancement system that transforms raw, unprocessed photographs into professionally retouched images. The model learns complex aesthetic adjustments (exposure correction, color grading, tone curves) from the MIT-Adobe FiveK dataset, specifically using Expert C retouching as the target enhancement style.
 
 The primary goal was to build a deep learning system capable of learning high-quality photographic enhancement while preserving fine details and working efficiently with high-resolution images. The final patch-based training approach successfully balances image quality, memory efficiency, and generalization capability.
+## 2. DATASET
 
-## 2. System Architecture
+This model is trained on MIT-Adobe FiveK dataset, which was the same used for Enhancement-A Model
+
+## 3. System Architecture
 
 ```
                        ┌────────────────────────────┐
@@ -61,9 +64,9 @@ The primary goal was to build a deep learning system capable of learning high-qu
                     └────────────────────────────────┘
 ```
 
-## 3. Method
+## 4. Method
 
-### 3.1 Residual Learning Architecture
+### 4.1 Residual Learning Architecture
 The model uses a residual learning framework that predicts enhancement corrections:
 
 **Core Principle:**
@@ -84,7 +87,7 @@ Output = Input + PredictedResidual
 
 **Total Parameters:** ~598,467
 
-### 3.2 Patch-Based Training Strategy
+### 4.2 Patch-Based Training Strategy
 Instead of resizing entire images, we extract random 128×128 patches from full-resolution images:
 
 **Preprocessing Steps:**
@@ -98,14 +101,14 @@ Instead of resizing entire images, we extract random 128×128 patches from full-
 - Memory efficient (train on high-res within GPU limits)
 - Better generalization (learns local patterns)
 
-### 3.3 Training Configuration
+### 4.3 Training Configuration
 - **Loss Function:** Mean Absolute Error (MAE)
 - **Optimizer:** Adam (learning rate: 1×10⁻⁴)
 - **Batch Size:** 16 patches
 - **Epochs:** 15
 - **Metrics:** MSE, PSNR, SSIM
 
-### 3.4 Data Pipeline Optimization
+### 4.4 Data Pipeline Optimization
 The training pipeline uses TensorFlow's `tf.data` API with:
 - Parallel preprocessing (`num_parallel_calls=AUTOTUNE`)
 - Dataset caching (avoid redundant I/O)
@@ -116,9 +119,9 @@ The training pipeline uses TensorFlow's `tf.data` API with:
 
 ---
 
-## 4. What Didn't Work
+## 5. What Didn't Work
 
-### 4.1 Full Image Training with Resizing
+### 5.1 Full Image Training with Resizing
 Our initial approach trained on entire images resized to 128×128:
 
 ```
@@ -139,7 +142,7 @@ Information Loss: 99.7%
 
 ---
 
-## 5. What Worked (Final Approach)
+## 6. What Worked (Final Approach)
 
 ### Patch-Based Training Pipeline
 The final system extracts patches from full-resolution images without downsampling:
@@ -167,7 +170,7 @@ The final system extracts patches from full-resolution images without downsampli
 
 ---
 
-## 6. Key Learnings
+## 7. Key Learnings
 
 ### 1. Patch-based training preserves quality
 Extracting patches from full-resolution images avoids information loss from downsampling while remaining memory efficient.
@@ -189,7 +192,7 @@ The patch-based approach balances multiple constraints: quality, memory, speed, 
 
 ---
 
-## 7. Performance Metrics
+## 8. Performance Metrics
 
 ### Training Performance (NVIDIA T4 GPU)
 - **Batch processing:** ~0.5s per batch
@@ -224,7 +227,7 @@ The patch-based approach balances multiple constraints: quality, memory, speed, 
 
 ---
 
-## 8. Architecture Details
+## 9. Architecture Details
 
 ### Residual Block Structure
 ```
@@ -278,7 +281,7 @@ Output [128,128,3]
 
 ---
 
-## 9. Future Improvements
+## 10. Future Improvements
 
 - [ ] **Multi-scale processing** for global-local context awareness
 - [ ] **Perceptual loss functions** (VGG-based) for better visual quality
@@ -291,5 +294,5 @@ Output [128,128,3]
 
 ---
 
-## 10. Final Summary
-This project delivers a robust image enhancement system using residual neural networks and patch-based training. The evolution from full-image resizing to patch extraction demonstrates critical deep learning principles: preserving information, efficient memory usage, and learning generalizable local patterns. The hybrid approach of residual learning with skip connections enables training deep networks that predict subtle enhancement corrections rather than complete reconstructions. The final system achieves professional-quality enhancement matching Expert C retouching style while maintaining practical performance and scalability for high-resolution images.
+## 11. Final Summary
+This model delivers a robust image enhancement system using residual neural networks and patch-based training. The evolution from full-image resizing to patch extraction demonstrates critical deep learning principles: preserving information, efficient memory usage, and learning generalizable local patterns. The hybrid approach of residual learning with skip connections enables training deep networks that predict subtle enhancement corrections rather than complete reconstructions. The final system achieves professional-quality enhancement matching Expert C retouching style while maintaining practical performance and scalability for high-resolution images.
