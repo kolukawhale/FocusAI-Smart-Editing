@@ -32,19 +32,19 @@ This checkpoint implements a deep learning-based image denoising system using Co
 
 1. **Fundamental Information Loss:** When images are compressed through downsampling, critical information is permanently destroyed. No algorithm—including deep learning—can truly recover what was lost. The CNN can only make educated guesses based on learned patterns, not reconstruct actual missing details.
 
-2. **High Baseline Performance:** For our test images (1920×1080 compressed to 640×360), bicubic interpolation already achieved 29-32 dB PSNR. This left minimal room for improvement. Our SRCNN achieved 29.31 dB versus bicubic's 29.34 dB—actually 0.03 dB worse!
+2. **High Baseline Performance:** For our test images (1920×1080 compressed to 640×360), bicubic interpolation already achieved 29-32 dB PSNR. This left minimal room for improvement. Our SRCNN achieved 29.31 dB versus bicubic's 29.34 dB—actually 0.03 dB worse! We compare to bicubic interpolation because it serves as the standard baseline reconstruction method—any CNN-based approach must outperform this simple, fast interpolation technique to justify the added complexity and computational cost of deep learning.
 
 3. **Image Size Issues:** 
-   - High-resolution images (4K, 1080p) remained high-quality even after compression
+   - High-resolution images (4K -> 1080p) remained high-quality even after compression
    - No visible degradation to "fix"
-   - Super-resolution only shows benefits when reconstructing from very low resolution (256×256 or less)
+   - Super-resolution only shows benefits when reconstructing from very low resolution, but then we face the information loss issue.
 
 4. **Training Challenges:**
-   - Training on 4K images was extremely slow (3+ hours)
+   - Training on 4K images was extremely slow
    - Resizing training images to 512px for speed destroyed the fine details the model needed to learn
    - Model struggled to generalize across different image resolutions
 
-5. **Limited Practical Value:** The visual difference between bicubic upscaling and CNN reconstruction was imperceptible, making it difficult to demonstrate the value of the deep learning approach.
+5. **Limited Practical Value:** The visual difference between bicubic upscaling and CNN reconstruction was imperceptible, making it difficult to demonstrate the value of the deep learning approach. This was the main reason to move to a new approach.
 
 ### New Approach: Image Denoising
 
@@ -116,13 +116,13 @@ Output = Input - Predicted Noise (Residual Learning)
 
 - `Denoising.ipynb` - Complete training pipeline
 - `results/` - Sample denoised images and visualizations
+- `dncnn_final.pth.zip` - the trained model
 - Training loss curves and metric plots
 
 ## Future Work
 
 - Train with variable noise levels (σ=15-50) for robustness
 - Implement real-world noise models (Poisson, speckle)
-- Extend to JPEG artifact removal
 - Integrate with FocusAI's region-based editing for selective denoising
 - Explore blind denoising (unknown noise levels)
 
